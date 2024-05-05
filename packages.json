@@ -27,7 +27,7 @@
     "logging": {
         "description": "Logging utility.",
         "repository": "pandoc-ext/logging",
-        "type": "Lua library"
+        "type": "Lua library",
         "version": "v1.0.0"
     },
 

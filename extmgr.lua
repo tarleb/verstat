@@ -1,6 +1,5 @@
 local json = require 'pandoc.json'
 local path = require 'pandoc.path'
-local system = require 'pandoc.system'
 local zip = require 'pandoc.zip'
 
 local name = arg[1] or error 'no extension given'
@@ -11,10 +10,6 @@ local packages = json.decode(packages_json, false) or
 
 local pkg = packages[name] or
   error('Extension ' .. name .. ' not found.')
-
-if pkg.type ~= 'github' then
-  error('Unknown extension type "' .. pkg.type .. '".')
-end
 
 if not pkg.repository then
   error('Packages of type "github" must list a repository.')
