@@ -25,13 +25,10 @@ local archive = zip.Archive(zip_contents)
 local filter_filename = name .. '.lua'
 
 local extension = {}
-for k, entry in pairs(archive.entries) do
-  if path.filename(entry.path) == filter_filename then
-    extension.filter = extension.filter
-      and (#extension.filter > #entry:contents()
-           and extension.filter
-           or entry:contents())
-      or entry:contents()
+for _, entry in pairs(archive.entries) do
+  if path.filename(entry.path) == filter_filename and
+     entry:symlink() == nil then
+    extension.filter = entry:contents()
   end
   if path.filename(entry.path) == 'LICENSE' then
     extension.license = entry:contents()
