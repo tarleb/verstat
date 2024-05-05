@@ -1,0 +1,63 @@
+{
+    "abstract-section": {
+        "description": "Make including an abstract more convenient.",
+        "repository": "pandoc-ext/abstract-section",
+        "version": "v1"
+    },
+
+    "cito": {
+        "description": "Handle CiTO (Citation Typing Ontology) information.",
+        "repository": "pandoc-ext/cito",
+        "version": "v1.0.0"
+    },
+
+    "diagram": {
+        "description": "Generate images from code, e.g., Mermaid or TikZ.",
+        "repository": "pandoc-ext/diagram",
+        "version": "v1"
+    },
+
+
+    "list-table": {
+        "description": "Allows to write tables as nested lists.",
+        "repository": "pandoc-ext/list-table",
+        "version": "v1.0.0"
+    },
+
+    "logging": {
+        "description": "Logging utility.",
+        "repository": "pandoc-ext/logging",
+        "type": "Lua library"
+        "version": "v1.0.0"
+    },
+
+    "multibib": {
+        "description": "Create multiple citations.",
+        "repository": "pandoc-ext/multibib",
+        "version": "v1.0.0"
+    },
+
+    "pagebreak": {
+        "description": "Allow to manually add page breaks in paged media.",
+        "repository": "pandoc-ext/pagebreak",
+        "version": "v0.1.0"
+    },
+
+    "pretty-urls": {
+        "description": "\"Prettifies\" bare URLs by removing the protocol prefix.",
+        "repository": "pandoc-ext/pretty-urls",
+        "version": "v1.0.0"
+    },
+
+    "run-lua": {
+        "description": "Execute embedded Lua instructions in the document.",
+        "repository": "pandoc-ext/run-lua",
+        "version": "v1.0.0"
+    },
+
+    "section-bibliographies": {
+        "description": "Let each chapter have its own bibliography.",
+        "repository": "pandoc-ext/section-bibliographies",
+        "version": "v1.0.0"
+    }
+}
