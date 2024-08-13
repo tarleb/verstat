@@ -1,3 +1,4 @@
+#!/usr/bin/env pandoc-lua
 local io       = require 'io'
 local List     = require 'pandoc.List'
 local json     = require 'pandoc.json'
