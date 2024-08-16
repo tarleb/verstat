@@ -12,9 +12,9 @@ local arg = arg
 
 assert(#arg > 0, "no extension given")
 
-local appname = 'doday'
+local appname = 'verstat'
 
---- Returns the name of the doday data directory.
+--- Returns the name of the verstat data directory.
 local function get_data_directory ()
   if os.getenv(appname .. '_DATA_DIR') then
     return os.getenv(appname .. '_DATA_DIR')

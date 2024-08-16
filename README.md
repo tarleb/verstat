@@ -1,5 +1,5 @@
-Doday
-=====
+Verstat
+=======
 
-Doday (додай) is a pandoc extensions manager, the primary use of which is to
-download extensions.
+Verstat (верстат) is a pandoc management tool, the primary use of which is
+currently to download extensions.
