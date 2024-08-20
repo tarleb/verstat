@@ -16,6 +16,7 @@ local appname = 'verstat'
 local usage = table.concat {
   'Usage: %s COMMAND [OPTIONS] [PARAMETER]...\n',
   'Options:\n',
+  '\t-t: set the target data directory; defaults to a pandoc user dir\n',
   '\t-v: increase verbosity; can be given multiple times\n',
 }
 
@@ -37,23 +38,40 @@ local function get_data_directory ()
   end
 end
 
-function parse_args (args)
-  -- default options
-  local options = {
-    datadir = get_data_directory(),
-    verbosity = 0,
-    command = false,
-  }
+--- Returns the name of the pandoc data directory.
+local function get_pandoc_data_directory ()
+  if os.getenv('XDG_DATA_HOME') then
+    return path.join{os.getenv('XDG_DATA_HOME'), 'pandoc'}
+  elseif os.getenv('HOME') then
+    return path.join{os.getenv('HOME'), '.local', 'share', 'pandoc'}
+  else
+    return 'data'
+  end
+end
+
+-- default options
+local default_options = {
+  datadir = get_data_directory(),
+  pandoc_data_dir = get_pandoc_data_directory(),
+  verbosity = 0,
+  command = false,
+}
+
+local function parse_args (args, opts)
   local positional_args = List{}
+  opts = opts or default_options
 
   do
     local i = 1
     while i <= #args do
       if args[i] == '-d' then
-        options.datadir = args[i + 1]
+        opts.datadir = args[i + 1]
+        i = i + 2
+      elseif args[i] == '-t' then
+        opts.pandoc_data_dir = args[i + 1]
         i = i + 2
       elseif args[i] == '-v' then
-        options.verbosity = options.verbosity + 1
+        opts.verbosity = opts.verbosity + 1
         i = i + 1
       elseif args[i]:match '^%-' then
         show_usage(args[0])
@@ -64,8 +82,8 @@ function parse_args (args)
       end
     end
   end
-  options.command = positional_args:remove(1)
-  return options, positional_args
+  opts.command = positional_args:remove(1)
+  return opts, positional_args
 end
 
 --- Returns `true` if there's a file with the given name and `false` otherwise.
@@ -205,6 +223,7 @@ end
 local function add_packages (names, options)
   --- Packages database
   local polytsya = load_packages(options.datadir, options.verbosity)
+  info('Writing files to ' .. options.pandoc_data_dir, options.verbosity)
   for _, pkgname in ipairs(names) do
     local pkg = get_package_data(polytsya, pkgname)
     local files = download(pkgname, pkg)
@@ -214,7 +233,7 @@ local function add_packages (names, options)
     for _, file in ipairs(files) do
       mediabag.insert(table.unpack(file))
     end
-    mediabag.write('.')
+    mediabag.write(options.pandoc_data_dir)
     print("✓ " .. pkgname)
   end
 end
