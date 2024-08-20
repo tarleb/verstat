@@ -8,11 +8,47 @@ local path     = require 'pandoc.path'
 local zip      = require 'pandoc.zip'
 
 --- Command line arguments
-local arg = arg
-
-assert(#arg > 0, "no extension given")
+local arg = arg or {}
 
 local appname = 'verstat'
+
+local usage = table.concat {
+  'Usage: %s COMMAND [OPTIONS] [PARAMETER]...\n',
+  'Options:\n',
+  '\t-v: increase verbosity; can be given multiple times\n',
+}
+
+function show_usage (progname)
+  progname = progname or appname
+  io.stderr:write(usage:format(progname))
+end
+
+function parse_args (args)
+  -- default options
+  local options = {
+    verbosity = 0,
+    command = false,
+  }
+  local positional_args = List{}
+
+  do
+    local i = 1
+    while i <= #args do
+      if args[i] == '-v' then
+        options.verbosity = options.verbosity + 1
+        i = i + 1
+      elseif args[i]:match '^%-' then
+        show_usage(args[0])
+        os.exit(1)
+      else
+        positional_args:insert(args[i])
+        i = i + 1
+      end
+    end
+  end
+  options.command = positional_args:remove(1)
+  return options, positional_args
+end
 
 --- Returns the name of the verstat data directory.
 local function get_data_directory ()
@@ -115,16 +151,29 @@ local function get_package_data (pkgname)
   return normalize_package(pkg)
 end
 
--- Each command line argument is taken to be the name of an extension.
-for _, pkgname in ipairs(arg) do
-  local pkg = get_package_data(pkgname)
-  local files = download(pkgname, pkg)
+------------------------------------------------------------------------
 
-  -- Write files
-  mediabag.empty()
-  for _, file in ipairs(files) do
-    mediabag.insert(table.unpack(file))
+local function add_packages (names)
+  for _, pkgname in ipairs(names) do
+    local pkg = get_package_data(pkgname)
+    local files = download(pkgname, pkg)
+
+    -- Write files
+    mediabag.empty()
+    for _, file in ipairs(files) do
+      mediabag.insert(table.unpack(file))
+    end
+    mediabag.write('.')
+    print("✓ " .. pkgname)
   end
-  mediabag.write('.')
-  print("✓ " .. pkgname)
+end
+
+local opts, positional_args = parse_args(arg)
+
+if opts.command == 'add' then
+  -- Each command line argument is taken to be the name of an extension.
+  add_packages(positional_args)
+else
+  io.stderr:write('Unknown command: ' .. opts.command)
+  os.exit(2)
 end
