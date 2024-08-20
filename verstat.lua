@@ -173,12 +173,12 @@ local function download (pkgname, pkgdata)
 
   return List{
     {
-      'filter/' .. filter_filename,
+      'filters/' .. filter_filename,
       'text/x-lua',
       extension.filter
     },
     {
-      'filter/' .. pkgname .. '.license',
+      'filters/' .. pkgname .. '.license',
       'text/plain',
       extension.license
     }
